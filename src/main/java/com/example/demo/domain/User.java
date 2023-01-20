@@ -1,10 +1,16 @@
 package com.example.demo.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @Document
 public class User implements Serializable {
@@ -15,6 +21,11 @@ public class User implements Serializable {
 	private String id;
 	private String name;
 	private String email;
+	
+	@Getter
+	@Setter
+	@DBRef(lazy = true) //lazy = true - retorna apenas users e nao posts
+	private List<Post> posts = new ArrayList<>();
 
 	public User() {
 
