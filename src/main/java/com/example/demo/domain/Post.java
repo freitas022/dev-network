@@ -12,7 +12,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import com.example.demo.dto.AuthorDTO;
 import com.example.demo.dto.CommentDTO;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
