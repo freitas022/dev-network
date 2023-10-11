@@ -1,25 +1,22 @@
 package com.example.demo.dto;
 
-import java.io.Serializable;
-
 import com.example.demo.domain.User;
-
-import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
+@Data
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
-public class AuthorDTO implements Serializable {
-	
-	private static final long serialVersionUID = 1L;
-	
-	private String id;
-	private String name;
+public class AuthorDTO {
 
-	public AuthorDTO(User obj) {
-		id = obj.getId();
-		name = obj.getName();
-	}
+    private String id;
+    private String name;
+
+    public AuthorDTO(User obj) {
+        id = obj.getId();
+        name = obj.getName();
+    }
 }

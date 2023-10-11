@@ -1,34 +1,39 @@
 package com.example.demo.service;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-
+import com.example.demo.dto.PostDTO;
+import com.example.demo.repository.PostRepository;
+import com.example.demo.service.exception.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.domain.Post;
-import com.example.demo.repository.PostRepository;
-import com.example.demo.service.exception.ObjectNotFoundException;
+import java.time.Instant;
+import java.util.List;
 
 @Service
 public class PostService {
 
-	@Autowired
-	private PostRepository repository;
+    private static final String MESSAGE = "Registro não encontrado.";
+    @Autowired
+    PostRepository repository;
 
-	public Post findById(String id) {
-		Optional<Post> post = repository.findById(id);
-		return post.orElseThrow(() -> new ObjectNotFoundException("Post não encontrado"));
-	}
-	
-	public List<Post> findByTitle(String text) {
-		return repository.searchTitle(text);
-	}
-	
-	public List<Post> fullSearch(String text, Date minDate, Date maxDate) {
-		maxDate = new Date(maxDate.getTime() + 24 * 60 * 60 * 1000);
-		return repository.fullSearch(text, minDate, maxDate);
-	}
+    public PostDTO findById(String postId) {
+        var post = repository.findById(postId)
+                .orElseThrow(() -> new ObjectNotFoundException(MESSAGE));
+        return new PostDTO(post);
+    }
 
+    public List<PostDTO> findByTitle(String title) {
+        return repository.searchTitle(title)
+                .stream()
+                .map(PostDTO::new)
+                .toList();
+    }
+
+    public List<PostDTO> fullSearch(String text, Instant minDate, Instant maxDate) {
+        maxDate = maxDate.plusSeconds(86400); // 24 * 60 * 60
+        return repository.fullSearch(text, minDate, maxDate)
+                .stream()
+                .map(PostDTO::new)
+                .toList();
+    }
 }

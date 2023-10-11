@@ -1,31 +1,34 @@
-package com.example.demo.domain;
+package com.example.demo.dto;
 
-import com.example.demo.dto.AuthorDTO;
-import com.example.demo.dto.CommentDTO;
+import com.example.demo.domain.Post;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Document
-public class Post {
+public class PostDTO {
 
-    @Id
     private String id;
     private Instant date;
     private String title;
     private String body;
     private AuthorDTO author;
-
     private List<CommentDTO> comments = new ArrayList<>();
+
+    public PostDTO(Post post) {
+        this.id = post.getId();
+        this.date = post.getDate();
+        this.title = post.getTitle();
+        this.body = post.getBody();
+        this.author = post.getAuthor();
+        this.comments = post.getComments();
+    }
+
 }
