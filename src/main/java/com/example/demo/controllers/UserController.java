@@ -1,7 +1,6 @@
 package com.example.demo.controllers;
 
-import com.example.demo.domain.Post;
-import com.example.demo.domain.User;
+import com.example.demo.dto.PostDTO;
 import com.example.demo.dto.UserDTO;
 import com.example.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,15 +25,19 @@ public class UserController {
 
 	@GetMapping(value = "/{userId}")
 	public ResponseEntity<UserDTO> findById(@PathVariable String userId) {
-		User obj = service.findById(userId);
-		return ResponseEntity.ok().body(new UserDTO(obj));
+		try {
+			return ResponseEntity.ok().body(service.findById(userId));
+		}
+		catch (Exception e) {
+			return ResponseEntity.notFound().build();
+		}
 	}
 
 	@PostMapping
 	public ResponseEntity<UserDTO> insert(@RequestBody UserDTO dto) {
 		dto = service.insert(dto);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId()).toUri();
-		return ResponseEntity.created(uri).build();
+		return ResponseEntity.created(uri).body(dto);
 	}
 
 	@DeleteMapping(value = "/{userId}")
@@ -50,8 +53,10 @@ public class UserController {
 	}
 
 	@GetMapping(value = "/{userId}/posts")
-	public ResponseEntity<List<Post>> findPosts(@PathVariable final String userId) {
-		var user = service.findById(userId);
-		return ResponseEntity.ok().body((user.getPosts()));
+	public ResponseEntity<List<PostDTO>> findPosts(@PathVariable final String userId) {
+			var list = service.findPosts(userId);
+			return ResponseEntity.ok().body(list);
+
+
 	}
 }
