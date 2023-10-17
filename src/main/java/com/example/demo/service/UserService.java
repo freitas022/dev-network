@@ -39,11 +39,8 @@ public class UserService {
     }
 
     public void delete(final String userId) {
-        try {
-            repository.deleteById(userId);
-        } catch (RuntimeException e) {
-            throw new ObjectNotFoundException(MESSAGE);
-        }
+        repository.delete(repository.findById(userId)
+                .orElseThrow(() -> new ObjectNotFoundException(MESSAGE)));
     }
 
     public UserDTO update(UserDTO dto, final String userId) {

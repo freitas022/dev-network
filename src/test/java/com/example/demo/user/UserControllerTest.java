@@ -33,16 +33,16 @@ import static org.hamcrest.CoreMatchers.is;
 class UserControllerTest {
 
     @Autowired
-    MockMvc mockMvc;
+    private MockMvc mockMvc;
 
     @Autowired
-    ObjectMapper mapper;
+    private ObjectMapper mapper;
 
     @MockBean
-    UserService service;
-    UserDTO dtoUser;
+    private UserService service;
+    private UserDTO dtoUser;
 
-    User user;
+    private User user;
 
     @BeforeEach
     void setUp() {
@@ -64,10 +64,10 @@ class UserControllerTest {
     void insert() throws Exception {
 
         // Given / Arrange
-        given(service.insert(any(UserDTO.class))).willReturn(dtoUser);
+        given(this.service.insert(any(UserDTO.class))).willReturn(dtoUser);
 
         // When / Act
-        ResultActions response = mockMvc.perform(post("/users")
+        ResultActions response = this.mockMvc.perform(post("/users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(dtoUser)));
 
@@ -82,11 +82,11 @@ class UserControllerTest {
 
         // Given / Arrange
         String id = "6529b2e7e92207d97084b987";
-        given(service.findById(id))
+        given(this.service.findById(id))
                 .willThrow(new ObjectNotFoundException("User not found"));
 
         // When / Act
-        var response = mockMvc.perform(get("/users/{id}", id));
+        var response = this.mockMvc.perform(get("/users/{id}", id));
 
         // Then / Assert
         response.andExpect(status()
@@ -106,10 +106,10 @@ class UserControllerTest {
                 .email("user.2@mail.com")
                 .build());
 
-        given(service.findAll()).willReturn(list);
+        given(this.service.findAll()).willReturn(list);
 
         // When / Act
-        ResultActions response = mockMvc.perform(get("/users"));
+        ResultActions response = this.mockMvc.perform(get("/users"));
 
         // Then / Assert
         response.
@@ -129,10 +129,10 @@ class UserControllerTest {
                 .name("John Doe")
                 .email("john@mail.com").build();
 
-        given(service.findById(id)).willReturn(user);
+        given(this.service.findById(id)).willReturn(user);
 
         // When / Act
-        ResultActions response = mockMvc.perform(get("/users/{id}", id));
+        ResultActions response = this.mockMvc.perform(get("/users/{id}", id));
 
         // Then / Assert
         response.
@@ -146,10 +146,10 @@ class UserControllerTest {
 
         // Given / Arrange
         String id = "6529ba020593b6ad11f21e71";
-        willDoNothing().given(service).delete(id);
+        willDoNothing().given(this.service).delete(id);
 
         // When / Act
-        var response = mockMvc.perform(delete("/users/{id}", id));
+        var response = this.mockMvc.perform(delete("/users/{id}", id));
 
         // Then / Assert
         response.
@@ -169,13 +169,13 @@ class UserControllerTest {
                 .email("eliot002@mail.com")
                 .build();
 
-        given(service.update(any(UserDTO.class), eq(id))).willReturn(userDTO);
+        given(this.service.update(any(UserDTO.class), eq(id))).willReturn(userDTO);
 
         //When / Act
 
-        var response = mockMvc.perform(put("/users/{id}", id)
+        var response = this.mockMvc.perform(put("/users/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(userDTO)));
+                        .content(this.mapper.writeValueAsString(userDTO)));
 
         //Then / Assert
         response.andExpect(status().isOk())
@@ -192,10 +192,10 @@ class UserControllerTest {
         var id = "652db910a55bd8bd525b71ea";
         var posts = new ArrayList<PostDTO>();
 
-        given(service.findPosts(id)).willReturn(posts);
+        given(this.service.findPosts(id)).willReturn(posts);
 
         // When / Act
-        var response = mockMvc.perform(get("/users/{id}/posts", id)
+        var response = this.mockMvc.perform(get("/users/{id}/posts", id)
                 .contentType(MediaType.APPLICATION_JSON));
 
         //Then / Assert
